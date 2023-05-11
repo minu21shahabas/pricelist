@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="top: 7rem; margin-left: 20rem;">
+<form action="{% url 'addpl' %}" method='post'>
+{% csrf_token %}
+name : <input type="text" name="name">
+<button type="submit">save</button>
+</form>
+</div>
+{% endblock %}

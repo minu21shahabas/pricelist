@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section>
+  <div class="fixed-top  " style="top: 7rem; margin-left: 20rem;">
+
+
+      <div class="row  ml-2">
+          <div class="col-md-3 "><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> New
+                  Price List</a></div>
+          <input type="hidden" id="state">
+      </div>
+
+      <div style="height: 600px; overflow-y: scroll;">
+          <form method="post" action="" id="forms">
+              {% csrf_token %}
+              <div class="row mb-4 border-top pt-5">
+                  <div class="col-sm-2"><label for="customer_name">Name*</label></div>
+                  <div class="col-sm-10">
+                      <input type="text" name="name" style="width: 50%; height: 35px;">
+                  </div>
+              </div>
+              <div class="row mb-4">
+                  <div class="col-sm-2"><label for="estimate_number">Type</label></div>
+                  <div class="col-sm-10"><input type="radio" id="estimate_number" name="type" class="" style="color: aliceblue;">Sales
+                    <input type="radio" id="estimate_number" name="type" class="">Purchase
+                  </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col-sm-2"><label for="estimate_number">Tax preference</label></div>
+                <div class="col-sm-10"><input type="radio" id="estimate_number" name="type" onclick="showAllSelect()" class="" style="color: aliceblue;">Markup or Markdown the item
+                  rates by a percentage
+                </div>
+                <div class=" col-sm-10">
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type="radio" id="estimate_number" name="type" onclick="hideAllSelect()" class="">Enter the rate individually
+                  for each item
+                </div><br>
+              <br><br><div class="row mb-4 border-bottom pb-5">
+                  <div class="col-sm-2"><label for="reference">Description</label></div>
+                  <div class="col-sm-4"><textarea name="desc" rows="5" cols="45"></textarea>
+                  </div>
+                  <br><div id="select1_div" class="row mb-4" style="display: none;">
+                    <label class="col-sm-2">Currency</label>
+                    <select name="currency" id="select1" class="col-sm-2">
+                      <option value="rupee">Indain Rupee</option>
+                    </select><br>
+                  </div>
+                  <div id="select3_div" class="row mb-4">
+                    <label class="text-danger" >
+                      Percentage *
+                    </label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group">
+                          <select name="mark">
+                            <option>Markup</option>
+                            <option>Markdown</option>
+                          </select>
+                        </div>
+                      </div>
+                      <input required type="text" name="per">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">%</div>
+                      </div>
+                    </div>
+                  </div><br>
+                  <div id="select4_div">
+                    <label class="text-danger" style="font-size: large;">Round Off
+                      To*</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <select name="round" style="font-size: large;">
+                      <option>Never Mind</option>
+                      <option>Nearest Whole Number</option>
+                      <option>0.99</option>
+                      <option>0.50</option>
+                      <option>0.49</option>
+        
+                    </select>
+                  </div>
+                  
+
+              <!-- <label for="">Price List</label><br> 
+              <table class="table  text-black" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);"
+                  onchange="calc()">
+                  <thead>
+                      <tr>
+                          <th>Item Details</th>
+                          <th class="text-right">Quantity</th>
+                          <th class="text-right">Rate</th>
+                          <th class="text-right">Discount</th>
+                          <th class="text-right">Tax</th>
+                          <th class="text-right">Amount</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+
+                      <tr id='row1'>
+                          <td>
+                              <div class='form-group'><select
+                                      class='form-control bg-transparent text-black border-0 item_select itm'
+                                      name='item[]' id='item1'>
+                                      <option class='text-dark'>Select Items</option>
+                                      {% for i in items %}
+                                      <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
+                                      {% endfor %}
+                                  </select></div>
+                          </td>
+                          <td class='text-right'><input type='number' id='qty1'
+                                  class='bg-transparent border-0 text-black text-right qty' name='quantity[]'
+                                  value='0'>
+                          </td>
+                          <td class='text-right'><input type='number' id='rate1'
+                                  class='bg-transparent border-0 text-black text-right rate' name='rate[]'
+                                  value='0.00'>
+                          </td>
+                          <td class='text-right'><input type='number' id='discount1'
+                                  class='bg-transparent border-0 text-black text-right discount' name='discount[]'
+                                  value='0.00'>
+                          </td>
+                          <td class='text-right'> <select name='tax[]' id='tax1'
+                                  class='form-control bg-transparent text-black text-right border-0 tax'>
+                                  <option value=0>Non Taxable</option>
+                                  <section id="gst_opt" class="hide">
+                                      <option id='tgst1' value=0></option>
+                                      <option value=0>0% GST</option>
+                                      <option value=5>5% GST</option>
+                                      <option value=12>12% GST</option>
+                                      <option value=18>18% GST</option>
+                                      <option value=28>28% GST</option>
+                                  </section>
+                                  <section id="igst_opt" class="hide">
+                                      <option id='tigst1' value=0></option>
+                                      <option value=0>0% IGST</option>
+                                      <option value=5>5% IGST</option>
+                                      <option value=12>12% IGST</option>
+                                      <option value=18>18% IGST</option>
+                                      <option value=28>28% IGST</option>
+                                  </section>
+
+                                  <option value=0>Out of Scope(0%)</option>
+                              </select></td>
+                          <td style="display: none;">
+                              <input type="number" name='taxamount[]' id="taxamount1"
+                                  class="form-control taxamount" />
+                          </td>
+                          <td class='text-right'><input type='number' id='amount1'
+                                  class='bg-transparent border-0 text-black text-right amount' name='amount[]'
+                                  value='0.00'></td>
+                          <td class='text-center'><button type='button' id='del_btn1'
+                                  class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
+                                  style='width:30px'><i class='fa fa-times'></i></button></td>
+                      </tr>
+                  </tbody>
+
+              </table>
+              <button type="button" class="btn btn-sm text-white" style="background-color: rgb(210, 132, 30) ;"
+                  id="add-row">Add another line</button>
+
+              <div class="row border-bottom pb-5">
+                  <div class="col-sm-6 d-flex flex-column mt-auto">
+
+                      <label for="">Customer Notes</label>
+                      <textarea name="customer_note" id="" cols="8" rows="3"
+                          placeholder=" Will be Displayed on the Estimate"></textarea>
+                  </div>
+                  <div class="col-sm-6">
+                      <table class="rounded table  text-black" style="background-color: rgba(250, 227, 198, 0.8);">
+                          <tr>
+                              <td>Sub Total</td>
+                              <td></td>
+                              <td><input type="number" id="subtotal" name="subtotal" value="0.00"
+                                      class="bg-transparent border-0 text-right"></td>
+                          </tr>
+                          <tr style="display: none;" id="tr_igst">
+                              <td>IGST</td>
+                              <td></td>
+                              <td><input type="number" id='igst' name="igst"
+                                      class="bg-transparent border-0 text-right" value='0.00'></td>
+                          </tr>
+                          <tr style="display: none;" id="tr_cgst">
+                              <td>CGST</td>
+                              <td></td>
+                              <td><input type="number" id='cgst' name="cgst"
+                                      class="bg-transparent border-0 text-right" value='0.00'></td>
+                          </tr>
+                          <tr style="display: none;" id="tr_sgst">
+                              <td>SGST</td>
+                              <td></td>
+                              <td><input type="number" id='sgst' name="sgst"
+                                      class="bg-transparent border-0 text-right" value='0.00'></td>
+                          </tr>
+                          <tr>
+                              <td>Tax Amount</td>
+                              <td></td>
+                              <td><input type="number" id="total_taxamount" name="total_taxamount" value="0.00"
+                                      class="bg-transparent border-0 text-right"></td>
+                          </tr>
+                          <tr>
+                              <td>Shipping Charges</td>
+                              <td><input type="number" id="shipping"> <i class="fas fa-question"></i></td>
+                              <td><input type="number" id="shipping_charge" name="shipping_charge" value="0.00"
+                                      class="bg-transparent border-0 text-right shipping_charge"></td>
+                          </tr>
+                          <tr>
+                              <td>Adjustmment</td>
+                              <td><input type="number" id="adjustment"> <i class="fas fa-question"></i></td>
+                              <td><input type="number" id="adjustment_charge" name="adjustment_charge" value="0.00"
+                                      class="bg-transparent border-0 text-right adjustment"> </td>
+                          </tr>
+                          <tr>
+                              <th>Total ( &#x20B9; )</th>
+                              <th></th>
+                              <th><input type="number" id="total" name="total" value="0.00"
+                                      class="bg-transparent border-0 text-right"></th>
+                          </tr>
+                      </table>
+                  </div>
+              </div>
+
+              <div class="row py-5 border-bottom">
+                  <div class="col-md-8 d-flex flex-column w-60 text-black">
+                      <label for="">Terms & Conditions</label>
+                      <textarea name="tearms_conditions" id="" cols="20" rows="5"
+                          placeholder=" Enter the terms & conditions of your business to be displayed in your transaction."></textarea>
+                  </div>
+                  <div class="col-md-4 py-5 text-center rounded" style="background-color: rgba(250, 227, 198, 0.8);">
+                      <label class="text-dark" for="">Attach File(s) to Estimate</label><br>
+
+                      <label for="file-upload" class="btn text-white border-0"
+                          style="background-color: rgb(210, 132, 30);">
+                          <i class="fas fa-upload text-white"></i> Upload File
+                      </label>
+                      <input id="file-upload" type="file" name="file" style="display:none;">
+
+
+
+                  </div>
+              </div>-->
+
+              <input type="submit" id="sub" onclick="submits()" class="btn text-white" style="background-color:  rgb(59, 59, 58) ; "
+                   value="Save">
+              <!-- <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; " -->
+                  <!-- onclick="saveAndSendDialog()" value="Save And Send"> -->
+              <!-- <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " -->
+                  <!-- onclick="cancelDialog()" value="Cancel"> -->
+          </form>
+
+
+
+      </div>
+
+  </div>
+
+
+
+</section>
+<script>
+  function showAllSelect() {
+    var select1_div = document.getElementById("select1_div");
+    select1_div.style.display = "none";
+    var select1_div = document.getElementById("select3_div");
+    select1_div.style.display = "block";
+    var select1_div = document.getElementById("select4_div");
+    select1_div.style.display = "block";
+  }
+
+  function hideAllSelect() {
+    var select1_div = document.getElementById("select3_div");
+    select1_div.style.display = "none";
+    var select1_div = document.getElementById("select4_div");
+    select1_div.style.display = "none";
+    var select1_div = documnt.getElementById("select1_div");
+    select1_div.style.display = "block";
+  }
+</script>
+<script>
+  function submits(){
+    var frm=document.getElementById('forms');
+    document.write();
+    frm.action=("{% url 'addpl' %}")
+    document.write();
+  }
+</script>
+{% endblock %}

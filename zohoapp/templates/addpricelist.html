@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section>
+  <div class="fixed-top  " style="top: 7rem; margin-left: 20rem;">
+
+
+    <div class="row  ml-2">
+      <div class="col-md-3 "><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> New
+          Estimate</a></div>
+      <input type="hidden" id="state" value="{{ company.state }}">
+    </div>
+
+    <div style="height: 600px; overflow-y: scroll;">
+
+      <form action="{% url 'addpl' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label" style="font-size: large;">Name</label>
+          <div class="col-sm-10">
+            <input type="text" id="inputEmail3" placeholder="name" name="name" style="font-size: large;">
+          </div>
+        </div>
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-sm-2 pt-0" style="font-size: large;">type</legend>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input style="font-size: large;" class="form-check-input" type="radio" name="type" id="gridRadios1"
+                  value="option1" checked>
+                <label class="form-check-label" for="gridRadios1" style="font-size: large;">
+                  sales
+                </label>
+              </div>
+              <div class="form-check">
+                <input style="font-size: large;" class="form-check-input" type="radio" name="type" id="gridRadios2"
+                  value="option2">
+                <label class="form-check-label" for="gridRadios2" style="font-size: large;">
+                  purchase
+                </label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="form-group">
+          <div class="row">
+            <legend class="col-form-label col-sm-2 pt-0" style="font-size: large;">tax preference</legend>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="form-check form-check-inline">
+              <input style="font-size: large;" class="form-check-input" type="radio" name="radio" id="inlineRadio1"
+                value="rate" onclick="showAllSelect()">
+              <label style="font-size: large;" class="form-check-label" for="inlineRadio1">Markup or Markdown the item
+                rates by a percentage</label>
+            </div>
+            <div class="form-check form-check-inline">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                class="form-check-input" type="radio" name="radio" id="inlineRadio2" value="mark"
+                onclick="hideAllSelect()">
+              <label style="font-size: large;" class="form-check-label" for="inlineRadio2">Enter the rate individually
+                for each item </label>
+            </div>
+          </div>
+        </fieldset>
+        <div class="row">
+          <div class="col">
+            <label style="font-size: large;">Description</label>
+            <textarea style="font-size: large;" name="desc" rows="4" cols="50"
+              placeholder="enter the Description"></textarea>
+          </div>
+          <div id="select1_div" style="display: none;">
+            <label for="select1" style="font-size: large;">Currency</label>
+            <select name="currency" id="select1" style="font-size: large;">
+              <option value="rupee">Indain Rupee</option>
+            </select><br>
+          </div>
+
+
+          <div id="select3_div">
+            <label class="text-danger" style="font-size: large;">
+              Percentage *
+            </label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group">
+                  <select name="mark" style="font-size: large;">
+                    <option>Markup</option>
+                    <option>Markdown</option>
+                  </select>
+                </div>
+              </div>
+              <input required type="text" name="per" style="font-size: large;">
+              <div class="input-group-prepend">
+                <div class="input-group-text" style="font-size: large;">%</div>
+              </div>
+            </div>
+          </div><br>
+          <div id="select4_div">
+            <label class="text-danger" style="font-size: large;">Round Off
+              To*</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <select name="round" style="font-size: large;">
+              <option>Never Mind</option>
+              <option>Nearest Whole Number</option>
+              <option>0.99</option>
+              <option>0.50</option>
+              <option>0.49</option>
+
+            </select>
+          </div>
+          <div>
+            <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ;" value="Save As Draft">       
+          </div>
+      </form>
+    </div>
+  </div>
+</section>
+<script>
+  function showAllSelect() {
+    var select1_div = document.getElementById("select1_div");
+    select1_div.style.display = "none";
+    var select1_div = document.getElementById("select3_div");
+    select1_div.style.display = "block";
+    var select1_div = document.getElementById("select4_div");
+    select1_div.style.display = "block";
+  }
+
+  function hideAllSelect() {
+    var select1_div = document.getElementById("select3_div");
+    select1_div.style.display = "none";
+    var select1_div = document.getElementById("select4_div");
+    select1_div.style.display = "none";
+    var select1_div = document.getElementById("select1_div");
+    select1_div.style.display = "block";
+  }
+</script>
+{% endblock %}
